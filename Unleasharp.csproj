@@ -6,6 +6,13 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Authors>Traber</Authors>
+    <Description>A swiss-knife multi-purpose database query building library. MySQL implementation.</Description>
+
+    <PackageProjectUrl>https://github.com/TraberSoftware/Unleasharp</PackageProjectUrl>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Baksteen.Extensions.DeepCopy" Version="1.0.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -13,5 +20,4 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
   </ItemGroup>
-
 </Project>
