@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
+    <VersionPrefix>1.0.1</VersionPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Authors>Traber</Authors>
     <Description>A swiss-knife multi-purpose database query building library. MySQL implementation.</Description>
 
