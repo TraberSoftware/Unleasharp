@@ -5,17 +5,17 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Unleasharp.ExtensionMethods {
-    public static class EnumExtension {
-        public static string GetDescription(this Enum EnumValue) {
-            FieldInfo              Field      = EnumValue.GetType().GetField(EnumValue.ToString());
-            DescriptionAttribute[] Attributes = Field.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+namespace Unleasharp.ExtensionMethods;
 
-            if (Attributes != null && Attributes.Any()) {
-                return Attributes.First().Description;
-            }
+public static class EnumExtension {
+    public static string GetDescription(this Enum enumValue) {
+        FieldInfo              field      = enumValue.GetType().GetField(enumValue.ToString());
+        DescriptionAttribute[] attributes = field.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
 
-            return EnumValue.ToString();
+        if (attributes != null && attributes.Any()) {
+            return attributes.First().Description;
         }
+
+        return enumValue.ToString();
     }
 }

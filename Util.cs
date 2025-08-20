@@ -10,172 +10,172 @@ using System.Security.Cryptography;
 using System.Text;
 using Unleasharp.ExtensionMethods;
 
-namespace Unleasharp {
-    public static class Util {
-        public static List<MethodInfo> GetExtensionMethods(Type T) {
-            List<MethodInfo> Methods = new List<MethodInfo>();
+namespace Unleasharp;
 
-            MethodInfo[] Caca = T.GetExtensionMethods();
+public static class Util {
+    public static List<MethodInfo> GetExtensionMethods(Type T) {
+        List<MethodInfo> methods = new List<MethodInfo>();
 
-            foreach (MethodInfo Method in T.GetMethods((BindingFlags)(-1))) {
+        MethodInfo[] caca = T.GetExtensionMethods();
 
-            }
+        foreach (MethodInfo method in T.GetMethods((BindingFlags)(-1))) {
 
-            return Methods;
         }
 
-        public static MethodInfo GetExtensionMethod(Type T, string MethodName) {
-            foreach (MethodInfo Method in GetExtensionMethods(T)) {
-                if (Method.Name == MethodName) {
-                    return Method;
-                }
-            }
+        return methods;
+    }
 
-            return null;
-        }
-
-
-        public static string HashString(string Input, string Algorithm) {
-            HashAlgorithm Hasher = __GetHasher(Algorithm);
-
-            if (Hasher != null) {
-                byte[] InputBytes = System.Text.Encoding.ASCII.GetBytes(Input);
-                byte[]  HashBytes = Hasher.ComputeHash(InputBytes);
-
-                return BitConverter.ToString(HashBytes).Replace("-", "").ToLowerInvariant();
-            }
-
-            return string.Empty;
-        }
-
-        public static Dictionary<string, string> HashFile(string Input, string[] Algorithms, int BufferSize = 4 * 1024 * 1024) {
-            using (File.OpenRead(Input)) {
-                return HashStream(File.OpenRead(Input), Algorithms, BufferSize);
+    public static MethodInfo GetExtensionMethod(Type T, string methodName) {
+        foreach (MethodInfo method in GetExtensionMethods(T)) {
+            if (method.Name == methodName) {
+                return method;
             }
         }
 
-        public static string HashFile(string Input, string Algorithm, int BufferSize = 4 * 1024 * 1024) {
-            using (File.OpenRead(Input)) {
-                return HashStream(File.OpenRead(Input), Algorithm, BufferSize);
+        return null;
+    }
+
+
+    public static string HashString(string input, string algorithm) {
+        HashAlgorithm hasher = __GetHasher(algorithm);
+
+        if (hasher != null) {
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[]  hashBytes = hasher.ComputeHash(inputBytes);
+
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+        }
+
+        return string.Empty;
+    }
+
+    public static Dictionary<string, string> HashFile(string input, string[] algorithms, int bufferSize = 4 * 1024 * 1024) {
+        using (File.OpenRead(input)) {
+            return HashStream(File.OpenRead(input), algorithms, bufferSize);
+        }
+    }
+
+    public static string HashFile(string input, string algorithm, int bufferSize = 4 * 1024 * 1024) {
+        using (File.OpenRead(input)) {
+            return HashStream(File.OpenRead(input), algorithm, bufferSize);
+        }
+    }
+
+    public static string HashStream(Stream input, string algorithm, int bufferSize = 4 * 1024 * 1024) {
+        HashAlgorithm hasher = __GetHasher(algorithm);
+
+        // File reading parameters
+        byte[] buffer     = new byte[bufferSize];
+        int    bytesRead  = 0;
+        
+        // Hash block by block
+        while ((bytesRead = input.Read(buffer, 0, buffer.Length)) != 0) {
+            hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
+        }
+
+        // Finalize the hasher
+        hasher.TransformFinalBlock(buffer, 0, 0);
+
+        return BitConverter.ToString(hasher.Hash).Replace("-", "").ToLowerInvariant();
+    }
+
+    public static Dictionary<string, string> HashStream(Stream input, string[] algorithms, int bufferSize = 4 * 1024 * 1024) {
+        Dictionary<string, string> result = new Dictionary<string, string>();
+
+        Dictionary<string, HashAlgorithm> hashers = new Dictionary<string, HashAlgorithm>();
+        foreach (string algorithm in algorithms) {
+            HashAlgorithm hasher = __GetHasher(algorithm);
+
+            if (hasher != null) {
+                hashers.Add(algorithm, hasher);
             }
         }
 
-        public static string HashStream(Stream Input, string Algorithm, int BufferSize = 4 * 1024 * 1024) {
-            HashAlgorithm Hasher = __GetHasher(Algorithm);
-
-            // File reading parameters
-            byte[] Buffer     = new byte[BufferSize];
-            int    BytesRead  = 0;
-            
-            // Hash block by block
-            while ((BytesRead = Input.Read(Buffer, 0, Buffer.Length)) != 0) {
-                Hasher.TransformBlock(Buffer, 0, BytesRead, null, 0);
+        // File reading parameters
+        byte[] buffer     = new byte[bufferSize];
+        int    bytesRead  = 0;
+        
+        // Hash block by block
+        while ((bytesRead = input.Read(buffer, 0, buffer.Length)) != 0) {
+            foreach (HashAlgorithm hasher in hashers.Values) {
+                hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
             }
-
-            // Finalize the hasher
-            Hasher.TransformFinalBlock(Buffer, 0, 0);
-
-            return BitConverter.ToString(Hasher.Hash).Replace("-", "").ToLowerInvariant();
         }
 
-        public static Dictionary<string, string> HashStream(Stream Input, string[] Algorithms, int BufferSize = 4 * 1024 * 1024) {
-            Dictionary<string, string> Result = new Dictionary<string, string>();
-
-            Dictionary<string, HashAlgorithm> Hashers = new Dictionary<string, HashAlgorithm>();
-            foreach (string Algorithm in Algorithms) {
-                HashAlgorithm Hasher = __GetHasher(Algorithm);
-
-                if (Hasher != null) {
-                    Hashers.Add(Algorithm, Hasher);
-                }
-            }
-
-            // File reading parameters
-            byte[] Buffer     = new byte[BufferSize];
-            int    BytesRead  = 0;
-            
-            // Hash block by block
-            while ((BytesRead = Input.Read(Buffer, 0, Buffer.Length)) != 0) {
-                foreach (HashAlgorithm Hasher in Hashers.Values) {
-                    Hasher.TransformBlock(Buffer, 0, BytesRead, null, 0);
-                }
-            }
-
-            // Finalize all hashers
-            foreach (HashAlgorithm Hasher in Hashers.Values) {
-                Hasher.TransformFinalBlock(Buffer, 0, 0);
-            }
-
-            foreach (KeyValuePair<string, HashAlgorithm> AlgorithmHasher in Hashers) {
-                Result.Add(AlgorithmHasher.Key, BitConverter.ToString(AlgorithmHasher.Value.Hash).Replace("-", "").ToLowerInvariant());
-            }
-
-            return Result;
+        // Finalize all hashers
+        foreach (HashAlgorithm hasher in hashers.Values) {
+            hasher.TransformFinalBlock(buffer, 0, 0);
         }
 
-        public static bool Implements<T>(Type Implemented) {
-            return Implemented.IsAssignableFrom(typeof(T));
+        foreach (KeyValuePair<string, HashAlgorithm> algorithmHasher in hashers) {
+            result.Add(algorithmHasher.Key, BitConverter.ToString(algorithmHasher.Value.Hash).Replace("-", "").ToLowerInvariant());
         }
 
-        public static bool Implements(Type MainType, Type Implemented) {
-            return Implemented.IsAssignableFrom(MainType);
-        }
+        return result;
+    }
 
-        public static List<string> GetAvailableHashingAlgorithms() {
-            __DetectAvailableHashingAlgorithms();
+    public static bool Implements<T>(Type implemented) {
+        return implemented.IsAssignableFrom(typeof(T));
+    }
 
-            return __HashAlgorithms.Keys.ToList();
-        }
+    public static bool Implements(Type mainType, Type implemented) {
+        return implemented.IsAssignableFrom(mainType);
+    }
 
-        private static HashAlgorithm __GetHasher(string Name) {
-            __DetectAvailableHashingAlgorithms();
+    public static List<string> GetAvailableHashingAlgorithms() {
+        __DetectAvailableHashingAlgorithms();
 
-            if (__HashAlgorithms.ContainsKey(Name.ToUpperInvariant())) {
-                Type HashAlgorithmType = __HashAlgorithms[Name.ToUpperInvariant()];
+        return _hashAlgorithms.Keys.ToList();
+    }
 
-                MethodInfo CreateMethod = HashAlgorithmType.GetMethod("Create", new Type[0]);
-                if (CreateMethod != null) {
-                    try {
-                        return (HashAlgorithm)CreateMethod.Invoke(null, null);
-                    }
-                    catch (Exception e) { }
-                }
+    private static HashAlgorithm __GetHasher(string name) {
+        __DetectAvailableHashingAlgorithms();
 
+        if (_hashAlgorithms.ContainsKey(name.ToUpperInvariant())) {
+            Type hashAlgorithmType = _hashAlgorithms[name.ToUpperInvariant()];
+
+            MethodInfo createMethod = hashAlgorithmType.GetMethod("Create", new Type[0]);
+            if (createMethod != null) {
                 try {
-                    return (HashAlgorithm)Activator.CreateInstance(HashAlgorithmType);
+                    return (HashAlgorithm)createMethod.Invoke(null, null);
                 }
                 catch (Exception e) { }
             }
 
-            return null;
+            try {
+                return (HashAlgorithm)Activator.CreateInstance(hashAlgorithmType);
+            }
+            catch (Exception e) { }
         }
 
-        private static Dictionary<string, Type> __HashAlgorithms = null;
-        private static void __DetectAvailableHashingAlgorithms() {
-            if (__HashAlgorithms == null) {
-                __HashAlgorithms = new Dictionary<string, Type>();
+        return null;
+    }
 
-                foreach (Assembly LocalAssembly in AppDomain.CurrentDomain.GetAssemblies()) {
-                    foreach (Type LocalAssemblyType in LocalAssembly.GetTypes()) {
-                        if (Implements(LocalAssemblyType, typeof(HashAlgorithm))) {
-                            if (
-                                LocalAssemblyType.Name != "HashAlgorithm"                  // We skip the interface
-                                &&
-                                LocalAssemblyType.Name != "Implementation"                 // We skip dummy implementations of hashing algorithms
-                                &&
-                                !Implements(LocalAssemblyType, typeof(KeyedHashAlgorithm)) // We skipped keyed hash algorithms as they need specific keying and can't be generalized
-                            ) {
-                                __HashAlgorithms.Add(LocalAssemblyType.Name.ToUpperInvariant(), LocalAssemblyType);
-                            }
+    private static Dictionary<string, Type> _hashAlgorithms = null;
+    private static void __DetectAvailableHashingAlgorithms() {
+        if (_hashAlgorithms == null) {
+            _hashAlgorithms = new Dictionary<string, Type>();
+
+            foreach (Assembly localAssembly in AppDomain.CurrentDomain.GetAssemblies()) {
+                foreach (Type localAssemblyType in localAssembly.GetTypes()) {
+                    if (Implements(localAssemblyType, typeof(HashAlgorithm))) {
+                        if (
+                            localAssemblyType.Name != "HashAlgorithm"                  // We skip the interface
+                            &&
+                            localAssemblyType.Name != "Implementation"                 // We skip dummy implementations of hashing algorithms
+                            &&
+                            !Implements(localAssemblyType, typeof(KeyedHashAlgorithm)) // We skipped keyed hash algorithms as they need specific keying and can't be generalized
+                        ) {
+                            _hashAlgorithms.Add(localAssemblyType.Name.ToUpperInvariant(), localAssemblyType);
                         }
                     }
                 }
-                
-                // Add custom HashAlgorithm implementations created within the executable
-                foreach (Type MainAssemblyType in Assembly.GetEntryAssembly().GetTypes()) {
-                    if (Implements(MainAssemblyType, typeof(HashAlgorithm))) {
-                        __HashAlgorithms.Add(MainAssemblyType.Name.ToUpperInvariant(), MainAssemblyType);
-                    }
+            }
+            
+            // Add custom HashAlgorithm implementations created within the executable
+            foreach (Type mainAssemblyType in Assembly.GetEntryAssembly().GetTypes()) {
+                if (Implements(mainAssemblyType, typeof(HashAlgorithm))) {
+                    _hashAlgorithms.Add(mainAssemblyType.Name.ToUpperInvariant(), mainAssemblyType);
                 }
             }
         }

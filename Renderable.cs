@@ -2,30 +2,30 @@
 using System.Reflection;
 using Unleasharp.ExtensionMethods;
 
-namespace Unleasharp {
-    public class Renderable {
-        public Renderable() { }
+namespace Unleasharp;
 
-        public override string ToString() {
-            MethodInfo RenderMethod = this.GetType().GetExtensionMethod("Render");
+public class Renderable {
+    public Renderable() { }
 
-            if (RenderMethod != null) {
-                object Rendered = null;
-                switch (true) {
-                    case true when RenderMethod.IsStatic:
-                        Rendered = RenderMethod.Invoke(null, new object[] { this });
-                        break;
-                    case true when !RenderMethod.IsStatic:
-                        Rendered = RenderMethod.Invoke(this, null);
-                        break;
-                }
+    public override string ToString() {
+        MethodInfo renderMethod = this.GetType().GetExtensionMethod("Render");
 
-                if (Rendered != null) {
-                    return Rendered as string;
-                }
+        if (renderMethod != null) {
+            object rendered = null;
+            switch (true) {
+                case true when renderMethod.IsStatic:
+                    rendered = renderMethod.Invoke(null, new object[] { this });
+                    break;
+                case true when !renderMethod.IsStatic:
+                    rendered = renderMethod.Invoke(this, null);
+                    break;
             }
 
-            return string.Empty;
+            if (rendered != null) {
+                return rendered as string;
+            }
         }
+
+        return string.Empty;
     }
 }
