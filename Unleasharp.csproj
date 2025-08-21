@@ -7,18 +7,23 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
-    <VersionPrefix>1.0.1</VersionPrefix>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2</FileVersion>
+    <VersionPrefix>1.0.2</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
     <Authors>Traber</Authors>
-    <Description>A swiss-knife multi-purpose database query building library. MySQL implementation.</Description>
+    <Description>A Swiss-knife library with general purpose classes and extensions.</Description>
 
     <PackageProjectUrl>https://github.com/TraberSoftware/Unleasharp</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Baksteen.Extensions.DeepCopy" Version="1.0.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

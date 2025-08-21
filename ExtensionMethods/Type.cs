@@ -16,13 +16,13 @@ public static class TypeExtension {
     /// </remarks>
     /// <returns>returns MethodInfo[] with the extended Method</returns>
     public static MethodInfo[] GetExtensionMethods(this Type t) {
-        List<Type> assTypes = new List<Type>();
+        List<Type> assemblyTypes = new List<Type>();
 
         foreach (Assembly item in AppDomain.CurrentDomain.GetAssemblies()) {
-            assTypes.AddRange(item.GetTypes());
+            assemblyTypes.AddRange(item.GetTypes());
         }
 
-        var query = from type in assTypes
+        var query = from type in assemblyTypes
                     where type.IsSealed && !type.IsGenericType && !type.IsNested
                     from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
                     where method.IsDefined(typeof(ExtensionAttribute), false)
@@ -40,9 +40,11 @@ public static class TypeExtension {
         var mi = from methode in t.GetExtensionMethods()
                  where methode.Name == methodeName
                  select methode;
-        if (mi.Count<MethodInfo>() <= 0)
+        if (mi.Count<MethodInfo>() <= 0) {
             return null;
-        else
+        }
+        else {
             return mi.First<MethodInfo>();
+        }
     }
 }
