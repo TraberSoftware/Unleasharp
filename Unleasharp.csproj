@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1</FileVersion>
-    <VersionPrefix>1.1.1</VersionPrefix>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2</FileVersion>
+    <VersionPrefix>1.1.2</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,11 +21,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath=""/>
+    <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Baksteen.Extensions.DeepCopy" Version="1.0.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="9.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
